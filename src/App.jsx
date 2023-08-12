@@ -4,10 +4,12 @@ import './App.css'
 import NoteList from "./components/NoteList.jsx";
 import {Toaster} from "react-hot-toast";
 import NoteStatus from "./components/NoteStatus.jsx";
+import NoteHeader from "./components/NoteHeader.jsx";
 
 
 const App = () => {
     const [note, setNote] = useState([])
+    const [sortBy, setSortBy] = useState("latest")
     const onDeleteNote = (id) => {
         // const filterNote = note.filter(item => item.id !== id)
         // setNote(filterNote)
@@ -19,15 +21,27 @@ const App = () => {
         setNote(newNote)
     }
 
+    let sortedNotes = note
+    if (sortBy === 'earliest')
+        sortedNotes = [...note].sort((a, b) => new Date(a.createAt) - new Date(b.createAt))
+
+    if (sortBy === 'latest')
+        sortedNotes = [...note].sort((a, b) => new Date(b.createAt) - new Date(a.createAt))
+
+    if (sortBy === 'completed')
+        sortedNotes = [...note].sort((a, b) => Number(b.completed) - Number(a.completed))
+
     return (
         <div className={'container'}>
-            <div className="note-header">note header</div>
+            <NoteHeader notes={note} sortBy={sortBy} setSortBy={(e) => setSortBy(e.target.value)}/>
             <div className="note-app">
                 <AddNewNote note={note} setNote={setNote}/>
-
                 <div className="note-container">
                     <NoteStatus notes={note}/>
-                    <NoteList note={note} onDeleteNote={onDeleteNote} onComplete={handelCompleteNote}/>
+
+                    <NoteList note={sortedNotes}
+                              onDeleteNote={onDeleteNote}
+                              onComplete={handelCompleteNote}/>
                 </div>
             </div>
             <Toaster/>
