@@ -1,11 +1,16 @@
 import React from 'react';
+import Message from "./Message.jsx";
 
 const NoteStatus = ({notes}) => {
     const lengthNotes = notes.length
     const completedNote = notes.filter((n) => n.completed).length
     const openNote = lengthNotes - completedNote
 
-    if (!lengthNotes) return <h2>no task - please add note</h2>
+    if (!lengthNotes) return <Message>
+        ℹ️🙄
+        no notes please add notes
+    </Message>
+
     return (
         <ul className={'note-status'}>
             <li>All <span>{lengthNotes}</span></li>
